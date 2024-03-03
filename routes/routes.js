@@ -1,5 +1,5 @@
 import express from 'express';
-import { getOngoingMatches } from '../controller/cricket';
+import { getOngoingMatches } from '../controller/cricket.js';
 
 
 const router = express.Router();
