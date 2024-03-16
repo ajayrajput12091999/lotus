@@ -1,22 +1,30 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { Topbar } from '../../components/Topbar';
 import axios from 'axios';
 import { BiSolidCricketBall } from "react-icons/bi";
+// import * as  Moment  from 'moment';
 
 export const Home = () => {
   const [getData, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  // const [geterror, setError] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post('https://app.toddapples.com/getCricketData', { 'url': "https://dream.bagpackkar.com/d110923/shyamp/getMatches?series_id=10693181&game_id=4" });
+        setLoading(true);
+        const response = await axios.post('https://app.toddapples.com/getCricketData',
+          { 'url': "https://dream.bagpackkar.com/d110923/shyamp/getMatches?series_id=10693181&game_id=4" }
+        );
         console.log(response.data);
+        setLoading(false);
         setData(response.data);
       } catch (error) {
         console.log(error);
+        setLoading(false);
+        // setError(error);
       }
     };
     fetchData();
-
   }, []);
 
 
@@ -46,6 +54,9 @@ export const Home = () => {
         </thead>
         <tbody className='tbody'>
           {
+            (loading) ? <tr><td colSpan={2}>Loading...</td></tr> : ''
+          }
+          {
             (getData.length > 0) && getData.map(matches => {
               // console.log(matches.event);\
               return (
@@ -54,11 +65,16 @@ export const Home = () => {
                     {matches.event.name}
                   </td>
                   <td style={{ width: "50%" }}>
+                    {/* { moment(matches.event.openDate).format('YYYY/DD/MM') } */}
                     {matches.event.openDate}
                   </td>
                 </tr>
               )
             })
+          }
+          {
+            // (geterror) ? <tr><td colSpan={2}>Internal Server Error</td></tr> : ''
+            (loading === false &&  getData.length === 0) ? <tr className='text-center'><td colSpan={2}>No matches found</td></tr> : ''
           }
         </tbody>
       </table>
