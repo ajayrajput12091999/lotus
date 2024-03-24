@@ -1,83 +1,174 @@
 import React, { useEffect, useState } from 'react';
-import { Topbar } from '../../components/Topbar';
+// import { Topbar } from '../../components/Topbar';
 import axios from 'axios';
-import { BiSolidCricketBall } from "react-icons/bi";
-// import * as  Moment  from 'moment';
+// import { BiSolidCricketBall } from "react-icons/bi";
+import { Layout } from '../../components/Layout';
+// import { useNavigate, Link, useParams } from 'react-router-dom';
 
 export const Home = () => {
+  const API_URL = 'http://localhost:4000';
   const [getData, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const [geterror, setError] = useState([]);
+  const [geterror, setError] = useState();
+  const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : "";
+  // const [show, setShow] = useState(true);
+  var  cartCountElement = document.getElementById("cartCount");
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axios.post('https://app.toddapples.com/getCricketData',
-          { 'url': "https://dream.bagpackkar.com/d110923/shyamp/getMatches?series_id=10693181&game_id=4" }
+        const response = await axios.get(API_URL + '/api/user/product/getProduct',
+          {
+            headers: {
+              // Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
         );
-        console.log(response.data);
+        if (response.data.success === true) {
+          setData(response.data.data);
+          console.log("fdf");
+        } else {
+          setError(response.data.message);
+        }
+        // console.log(JSON.stringify(response.data.message));
         setLoading(false);
-        setData(response.data);
+
       } catch (error) {
         console.log(error);
         setLoading(false);
+        console.log("error");
         // setError(error);
       }
     };
     fetchData();
   }, []);
 
+  const addToCart = async (product_id,product_name,product_description,category_description,mrp) => {
+    console.log(product_id);
 
+    if(user && user.role_type !== "user"){
+      alert("You are admin ! Cannot add product");
+      return false;
+    }
+    // return false;
+    if (window.confirm("Are You sure you want to add product in cart") === true) {
+      var cart = localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : ""; 
+      console.log(cart);
+      // var  cartCountElement = document.getElementById("cartCount");
+      var temp_cart_array = {};
+      if(cart === ""){
+        var cart_array = [];
+        temp_cart_array = {
+
+          product_id : product_id,
+          product_name: product_name,
+          product_description : product_description,
+          category_description : category_description,
+          mrp:mrp
+        };
+        var hide_button = document.getElementById(product_id);
+        console.log(hide_button.className = "displayNone btn btn-success");
+        hide_button.innerHTML = "Added";
+        // this.setState = false;
+        // setShow(false);
+        // console.log(show);        // temp_cart_array.
+        // temp_cart_array['product_name'] = product_name;
+        // temp_cart_array['product_description'] = product_description;
+        // temp_cart_array['category_description'] =category_description;
+        // temp_cart_array['mrp'] = mrp;
+        cart_array.push(temp_cart_array);
+        cartCountElement.innerHTML = cart_array.length
+        console.log(JSON.stringify(cart_array));
+        localStorage.setItem('cart',JSON.stringify(cart_array));
+      }else{
+        console.log("Not empty");
+        console.log(cart);
+        // var cart_array = [];
+        temp_cart_array = {
+
+          product_id : product_id,
+          product_name: product_name,
+          product_description : product_description,
+          category_description : category_description,
+          mrp:mrp
+        };
+        hide_button = document.getElementById(product_id);
+        console.log(hide_button.className = "displayNone btn btn-danger");
+        hide_button.innerHTML = "Added";
+        cart.push(temp_cart_array);
+        cartCountElement.innerHTML = cart.length
+        console.log(JSON.stringify(cart));
+        localStorage.setItem('cart',JSON.stringify(cart));
+        
+      }
+      console.log(cart);
+    }
+  }
   return (
-    <div className='container-fluid' style={{ paddingRight: "11px", paddingLeft: "11px" }}>
-      <Topbar open_beat_count="9" />
-      <hr></hr>
+    <Layout>
+
       <div className='row justify-content-center'>
-        <div className='col-12 mt-1' style={{ fontSize: "18px", fontWeight: "600" }}><BiSolidCricketBall size={22} color='#257b23' /> Cricket</div>
-        {/* <div className='col-5'>
-          <div className='row'>
-            <div className='col-4 mt-1'><small>1</small></div>
-            <div className='col-4 mt-1'><small>X</small></div>
-            <div className='col-4 mt-1'><small>2</small></div>
-          </div>
-        </div> */}
+        {
+          (loading) ? <div className=''>Loading...</div> : ""
+        }
+        {
+          (getData.length > 0) && getData.map(product => {
+            var display_flag = true;
+            console.log(display_flag+"-"+product._id)
+            var cart = localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : ""; 
+            if(cart.length > 0){
+              if(cartCountElement){
+                cartCountElement.innerHTML = cart.length;  
+              }
+              var findRes = cart.map((o)=>{
+                return o.product_id;
+                // consoldisplay_flag = false;
+                  // console.log("Product matched"+o.product_id);
+                  // console.log(display_flag);e.log(o.product_id)
+                // if(o.product_id === product._id){
+                  
+                  // return false
+                // }else{
+                  // return true
+                // }
+              });
+            }
+            // var  cartCountElement = document.getElementById("cartCount");
+            
+            if(cart.length > 0 &&  findRes.includes(product._id,findRes)){
+              display_flag = false;
+            }
+            if(user && user.role_type === "admin"){
+              display_flag = false;
+            }
+            return (
+              <div className='col-4 mt-4 formCenter' key={product._id}>
+                <div className="card formCenter" style={{maxWidth: "20rem",maxHeight:"30rem"}}>
+                  <img className="card-img-top img-responsive"
+                   src="https://th.bing.com/th/id/OIP.naE-dFGDkR_TBUPMFzbEpQHaIx?w=161&h=190&c=7&r=0&o=5&dpr=1.3&pid=1.7"
+                    height={150} width={150} style={{objectFit:"contain"}}  alt="..."/>
+                    <div className="card-body">
+                      <h5 className="card-title">{product.product_name  }</h5>
+                      <p className="card-text">{product.product_description}</p>
+                      <p className="card-text">{product.mrp} Rs</p>
+                      
+                      {display_flag && display_flag === true  ? 
+                      <button onClick={()=>addToCart(product?._id,product?.product_name,product?.product_description,product?.category_name,product?.mrp)} className="btn btn-warning " id={`${product?._id}`}>Add To Cart</button> 
+                      : ((user && user.role_type === "user") || (!user)) ? <button className='btn btn-danger displayNone'>Added</button> : ""}
+                      
+                    </div>
+                </div>
+              </div>
+
+            )
+          })
+        }
+        {
+          getData.length === 0 ? <div className='mt-5'>{geterror}</div> : ""
+        }
+
       </div>
-      <div className='row justify-content-center mt-2'>
-        <div className='col-12'><h6>{(getData.length > 0) ? getData[0].competition.name : ''}</h6></div>
-      </div>
-      <table className='table table-hover'>
-        <thead className='thead'>
-          <tr>
-            <th>Matches</th>
-            <th>Timing</th>
-          </tr>
-        </thead>
-        <tbody className='tbody'>
-          {
-            (loading) ? <tr><td colSpan={2}>Loading...</td></tr> : ''
-          }
-          {
-            (getData.length > 0) && getData.map(matches => {
-              // console.log(matches.event);\
-              return (
-                <tr key={matches.event.id}>
-                  <td style={{ width: "50%" }}>
-                    {matches.event.name}
-                  </td>
-                  <td style={{ width: "50%" }}>
-                    {/* { moment(matches.event.openDate).format('YYYY/DD/MM') } */}
-                    {matches.event.openDate}
-                  </td>
-                </tr>
-              )
-            })
-          }
-          {
-            // (geterror) ? <tr><td colSpan={2}>Internal Server Error</td></tr> : ''
-            (loading === false &&  getData.length === 0) ? <tr className='text-center'><td colSpan={2}>No matches found</td></tr> : ''
-          }
-        </tbody>
-      </table>
-    </div>
+    </Layout>
   )
 }
