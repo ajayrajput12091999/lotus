@@ -146,11 +146,12 @@ export const Home = () => {
             if(user && user.role_type === "admin"){
               display_flag = false;
             }
+            var file_path = API_URL+"/uploads/"+product.product_image;
             return (
               <div className='col-4 mt-4 formCenter' key={product._id}>
                 <div className="card formCenter" style={{maxWidth: "20rem",maxHeight:"30rem"}}>
                   <img className="card-img-top img-responsive"
-                   src="https://th.bing.com/th/id/OIP.naE-dFGDkR_TBUPMFzbEpQHaIx?w=161&h=190&c=7&r=0&o=5&dpr=1.3&pid=1.7"
+                   src={file_path}
                     height={150} width={150} style={{objectFit:"contain"}}  alt="..."/>
                     <div className="card-body">
                       <h5 className="card-title">{product.product_name  }</h5>

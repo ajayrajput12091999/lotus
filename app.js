@@ -48,6 +48,7 @@ app.use('/', Routes);
 app.use('/api/user',user_routes);
 app.use('/api/user/product',product_routes);
 app.use('/api/user/order',order_routes);
+app.use('/uploads',express.static("uploads"));
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

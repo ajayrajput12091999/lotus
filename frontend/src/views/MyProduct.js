@@ -42,6 +42,7 @@ export const MyProduct = () => {
                         localStorage.setItem("token", "");
                         localStorage.setItem("user", "");
                         localStorage.setItem("isLoggedIn", JSON.stringify(false));
+                        navigate("/home");
                     } else {
                         // localStorage.setItem("token", "");
                         // localStorage.setItem("user", "");
@@ -50,7 +51,7 @@ export const MyProduct = () => {
                     setTimeout(() => {
                         toast.error(response.data.message);
                     }, 700);
-                    navigate("/home");
+                    
                 }
                 // console.log(JSON.stringify(response.data.message));
                 setLoading(false);
@@ -146,7 +147,7 @@ export const MyProduct = () => {
                     </thead>
                     <tbody className=''>
                         {
-                            (loading) ? <tr><td colSpan='6'>Loading...</td></tr> : ""
+                            (loading) ? <tr><td colSpan='6' className='text-center'>Loading...</td></tr> : ""
                         }
                         {
 
@@ -170,7 +171,7 @@ export const MyProduct = () => {
                             })
                         }
                         {
-                            getData.length === 0 ? <tr><td colSpan='6'>{geterror}</td></tr> : ""
+                            getData.length === 0 ? <tr><td colSpan='6' className='text-center'>{geterror}</td></tr> : ""
                         }
                         <tr></tr>
                     </tbody>
