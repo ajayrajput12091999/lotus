@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link, useParams } from 'react-router-dom';
 import { Layout } from '../components/Layout';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const ProductEdit = () => {
     const API_URL = 'http://localhost:4000';
@@ -45,7 +47,7 @@ export const ProductEdit = () => {
 
                     setData(response.data.data);
                     console.log(response.data.data.length)
-                    // console.log("fdf");
+
                 } else {
                     setError(response.data.message);
                     if (response.data.message === 'Token expired') {
@@ -57,7 +59,10 @@ export const ProductEdit = () => {
                         // localStorage.setItem("user", "");
                         // localStorage.setItem("isLoggedIn", JSON.stringify(false));
                     }
-                    alert(response.data.message);
+                    setTimeout(() => {
+                        toast.error(response.data.message);
+                    }, 700);
+
                     navigate("/home");
                 }
                 // console.log(JSON.stringify(response.data.message));
@@ -83,7 +88,7 @@ export const ProductEdit = () => {
                 product_name: product_name,
                 category_name,
                 mrp,
-                //  created_by:user._id
+                created_by: user._id
 
             },
                 {
@@ -99,8 +104,11 @@ export const ProductEdit = () => {
                 // console.log("fdf");
                 setLoading(false);
                 // setData(response.data);
-                alert(response.data.message);
-                console.log("fdf");
+                // alert(response.data.message);
+                setTimeout(() => {
+                    toast.success(response.data.message);
+                }, 700);
+
                 navigate("/myproducts");
             } else {
                 setError(response.data.message);
@@ -113,7 +121,9 @@ export const ProductEdit = () => {
                     // localStorage.setItem("user", "");
                     // localStorage.setItem("isLoggedIn", JSON.stringify(false));
                 }
-                alert(response.data.message);
+                // alert(response.data.message);
+                toast.error(response.data.message);
+
                 navigate("/home");
             }
             // console.log(JSON.stringify(response.data.message));

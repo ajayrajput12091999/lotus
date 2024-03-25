@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Layout } from '../components/Layout';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from 'axios'; import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 export const CheckOut = () => {
     const API_URL = 'http://localhost:4000';
 
@@ -17,9 +19,11 @@ export const CheckOut = () => {
     const navigate = useNavigate();
     useEffect(() => {
         if (!user) {
-            alert("Please login to checkout process");
+            setTimeout(() => {
+                toast.error("Please login to checkout");
+            }, 700);
             navigate("/login");
-            return false;
+            // return false;
         } else {
             var cart = localStorage.getItem("cart") ? JSON.parse(localStorage.getItem("cart")) : [];
             var total_amount = 0;
@@ -33,7 +37,9 @@ export const CheckOut = () => {
                 setTotalAmount(total_amount);
                 // return false;
             } else {
-                alert("cart is empty");
+                setTimeout(() => {
+                    toast.error("Cart is empty");
+                }, 700);
                 navigate("/home");
             }
 
@@ -45,14 +51,14 @@ export const CheckOut = () => {
         try {
             setLoading(true);
             const response = await axios.post(API_URL + '/api/user/order/placeOrder', {
-                created_by:user._id,
-                products:cart,
+                created_by: user._id,
+                products: cart,
                 address,
-                payment_type:'cash',
-                customer_name:user.name,
-                total_amount:totalamount,
-                order_status:1,//confirm
-                order_date:Date.now()
+                payment_type: 'cash',
+                customer_name: user.name,
+                total_amount: totalamount,
+                order_status: 1,//confirm
+                order_date: Date.now()
             },
                 {
                     headers: {
@@ -67,8 +73,9 @@ export const CheckOut = () => {
                 // console.log("fdf");
                 setLoading(false);
                 // setData(response.data);
-                alert(response.data.message);
-                console.log("fdf");
+                setTimeout(() => {
+                    toast.success(response.data.message);
+                }, 700);
                 navigate("/myorderhistory");
             } else {
                 setError(response.data.message);
@@ -81,7 +88,7 @@ export const CheckOut = () => {
                     // localStorage.setItem("user", "");
                     // localStorage.setItem("isLoggedIn", JSON.stringify(false));
                 }
-                alert(response.data.message);
+                toast.error(response.data.message);
                 // navigate("/home");
             }
             // console.log(JSON.stringify(response.data.message));

@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 // import { BiSolidCricketBall } from "react-icons/bi";
 import { Layout } from '../../components/Layout';
-// import { useNavigate, Link, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Home = () => {
   const API_URL = 'http://localhost:4000';
@@ -27,9 +28,10 @@ export const Home = () => {
         );
         if (response.data.success === true) {
           setData(response.data.data);
-          console.log("fdf");
         } else {
           setError(response.data.message);
+          toast.error(response.data.message);
+          
         }
         // console.log(JSON.stringify(response.data.message));
         setLoading(false);
@@ -48,7 +50,8 @@ export const Home = () => {
     console.log(product_id);
 
     if(user && user.role_type !== "user"){
-      alert("You are admin ! Cannot add product");
+      
+      toast.error("You are admin ! Cannot add product");
       return false;
     }
     // return false;
@@ -81,6 +84,7 @@ export const Home = () => {
         cartCountElement.innerHTML = cart_array.length
         console.log(JSON.stringify(cart_array));
         localStorage.setItem('cart',JSON.stringify(cart_array));
+        toast.success("Product added to cart");
       }else{
         console.log("Not empty");
         console.log(cart);
@@ -100,7 +104,7 @@ export const Home = () => {
         cartCountElement.innerHTML = cart.length
         console.log(JSON.stringify(cart));
         localStorage.setItem('cart',JSON.stringify(cart));
-        
+        toast.success("Product added to cart");
       }
       console.log(cart);
     }

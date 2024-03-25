@@ -4,6 +4,10 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { FaCartPlus } from "react-icons/fa6";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export const Header = () => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") ? JSON.parse(localStorage.getItem("isLoggedIn")) : "";
@@ -34,9 +38,11 @@ export const Header = () => {
         localStorage.setItem("token", "");
         localStorage.setItem("user", "");
         localStorage.setItem("isLoggedIn", JSON.stringify(false));
-        alert(response.data.message);
+        setTimeout(() => {
+          toast.success(response.data.message);
+        }, 700);
+
         navigate("/login");
-        console.log("fdf");
       } else {
         if (response.data.message === 'Token expired') {
           localStorage.setItem("token", "");
@@ -47,7 +53,11 @@ export const Header = () => {
           localStorage.setItem("user", "");
           localStorage.setItem("isLoggedIn", JSON.stringify(false));
         }
-        alert(response.data.message);
+        // alert(response.data.message);
+        setTimeout(() => {
+          toast.error(response.data.message);
+        }, 700);
+
         navigate("/home");
         // setError(response.data.message);
       }
@@ -106,15 +116,16 @@ export const Header = () => {
               :
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/signup">Signup</Link>
+                  <Link className="nav-link btn btn-danger text-white" to="/signup">Signup</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/login">Login</Link>
+                  <Link className="nav-link btn btn-warning text-white" to="/login">Login</Link>
                 </li>
               </>
             }
 
           </ul>
+          <ToastContainer />
 
         </div>
       </div>

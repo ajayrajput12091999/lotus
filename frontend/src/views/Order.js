@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { Layout } from '../components/Layout';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 export const Order = () => {
     const API_URL = 'http://localhost:4000';
@@ -37,7 +40,8 @@ export const Order = () => {
                 );
                 if (response.data.success === true) {
                     setData(response.data.data);
-                    console.log(response.data.data.length)
+                    toast.success(response.data.message);
+                    // console.log(response.data.data.length)
                     // console.log("fdf");
                 } else {
                     setError(response.data.message);
@@ -50,7 +54,7 @@ export const Order = () => {
                         // localStorage.setItem("user", "");
                         // localStorage.setItem("isLoggedIn", JSON.stringify(false));
                     }
-                    alert(response.data.message);
+                    toast.error(response.data.message);
                     // navigate("/home");
                 }
                 // console.log(JSON.stringify(response.data.message));

@@ -21,7 +21,7 @@ route.post('/updateAdminProductByProductId',AuthController.auth,[
     check('category_name','Category name is empty').not().isEmpty(),
     check('product_id','Product Id is empty').not().isEmpty(),
     // check('product_image','Product image is empty').not().isEmpty(),
-],ProductController.addProduct);
+],ProductController.updateAdminProductByProductId);
     
 route.post('/getAdminProductByUserId',AuthController.auth,[
     check('user_id','User id is empty').not().isEmpty(),

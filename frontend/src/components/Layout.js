@@ -7,7 +7,7 @@ export const Layout = ({children}) => {
     <>
         <Header/>
             <div className='container'>
-            <main style={{minHeight:"80vh"}}>
+            <main style={{minHeight:"85vh"}}>
             {children}    
             </main>
             </div>

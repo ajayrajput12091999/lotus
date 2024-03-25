@@ -7,7 +7,7 @@ export const MyProfile = () => {
     return (
         <Layout>
             <div className='row col-md-6 formCenter mt-5'>
-                <h3 className='text-center'>Welcome Back</h3>
+                <h3 className='text-center'>Profile</h3>
                 <br/>
                 <div className='border p-5'>
                     <p>Name : {user && user.name ? user.name : ""} </p> 

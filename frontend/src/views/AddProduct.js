@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { Layout } from '../components/Layout';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const AddProduct = () => {
     const API_URL = 'http://localhost:4000';
@@ -17,9 +19,9 @@ export const AddProduct = () => {
     const token = localStorage.getItem("token") ? JSON.parse(localStorage.getItem("token")) : "";
     const navigate = useNavigate();
 
-        if (!isLoggedIn) {
-            navigate("/home");
-        }
+    if (!isLoggedIn) {
+        navigate("/home");
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,7 +32,7 @@ export const AddProduct = () => {
                 product_name: product_name,
                 category_name,
                 mrp,
-                created_by:user._id
+                created_by: user._id
 
             },
                 {
@@ -47,7 +49,10 @@ export const AddProduct = () => {
                 setLoading(false);
                 // setData(response.data);
                 alert(response.data.message);
-                console.log("fdf");
+                
+                setTimeout(() => {
+                    toast.success(response.data.message);
+                }, 700);
                 navigate("/myproducts");
             } else {
                 setError(response.data.message);
@@ -55,13 +60,16 @@ export const AddProduct = () => {
                     localStorage.setItem("token", "");
                     localStorage.setItem("user", "");
                     localStorage.setItem("isLoggedIn", JSON.stringify(false));
+                    navigate("/home");
                 } else {
                     // localStorage.setItem("token", "");
                     // localStorage.setItem("user", "");
                     // localStorage.setItem("isLoggedIn", JSON.stringify(false));
                 }
                 alert(response.data.message);
-                navigate("/home");
+                await toast.error(response.data.message);
+
+
             }
             // console.log(JSON.stringify(response.data.message));
             setLoading(false);

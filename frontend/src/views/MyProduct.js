@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { Layout } from '../components/Layout';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const MyProduct = () => {
     const API_URL = 'http://localhost:4000';
@@ -12,7 +14,7 @@ export const MyProduct = () => {
     const user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : "";
     const token = localStorage.getItem("token") ? JSON.parse(localStorage.getItem("token")) : "";
     const navigate = useNavigate();
-    useEffect(() => {
+    const getProduct = useCallback(() => {
 
         if (!isLoggedIn) {
             navigate("/home");
@@ -45,7 +47,9 @@ export const MyProduct = () => {
                         // localStorage.setItem("user", "");
                         // localStorage.setItem("isLoggedIn", JSON.stringify(false));
                     }
-                    alert(response.data.message);
+                    setTimeout(() => {
+                        toast.error(response.data.message);
+                    }, 700);
                     navigate("/home");
                 }
                 // console.log(JSON.stringify(response.data.message));
@@ -60,6 +64,10 @@ export const MyProduct = () => {
         };
         fetchData();
     }, [token, isLoggedIn, navigate, user._id]);
+
+    useEffect(()=>{
+        getProduct();
+    },[getProduct]);
 
     const deleteProducts = async (id) => {
         // console.log(e);
@@ -81,23 +89,27 @@ export const MyProduct = () => {
                 if (response.data.success === true) {
                     // console.log("fdf");
                     setLoading(false);
+                    getProduct();
                     // setData(response.data);
-                    alert(response.data.message);
+                    setTimeout(() => {
+                        toast.success(response.data.message);
+                    }, 700);
                     console.log("fdf");
-                    navigate("/myproducts");
+                    
                 } else {
                     setError(response.data.message);
                     if (response.data.message === 'Token has expired') {
                         localStorage.setItem("token", "");
                         localStorage.setItem("user", "");
                         localStorage.setItem("isLoggedIn", JSON.stringify(false));
+                        navigate("/home");
                     } else {
                         // localStorage.setItem("token", "");
                         // localStorage.setItem("user", "");
                         // localStorage.setItem("isLoggedIn", JSON.stringify(false));
                     }
-                    alert(response.data.message);
-                    navigate("/home");
+                    toast.error(response.data.message);
+                    
                 }
                 // console.log(JSON.stringify(response.data.message));
                 setLoading(false);

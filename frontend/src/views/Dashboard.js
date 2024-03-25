@@ -76,8 +76,8 @@ export const Dashboard = () => {
     
     return (
         <Layout>
-            <h4 className='text-center mt-5'>Dashboard</h4>
-            <div className='row justify-content-center'>
+            <h2 className='text-center mt-5'>Dashboard</h2>
+            <div className='row justify-content-center mt-5'>
                 
                 {
                     (loading) ? <div className='col-md-12 text-center'>Loading...</div> : ""

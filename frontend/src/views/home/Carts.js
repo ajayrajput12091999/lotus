@@ -2,6 +2,8 @@ import React, { useState, useEffect,useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { Layout } from '../../components/Layout';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Carts = () => {
     const API_URL = 'http://localhost:4000';
@@ -57,7 +59,7 @@ export const Carts = () => {
                 objectTOdelete !== -1 && cart.splice(objectTOdelete ,1);
                 localStorage.setItem('cart',JSON.stringify(cart));
                 getCart();
-                alert("Product deleted successfully from cart");
+                toast.success("Product deleted successfully from cart");
                 
                 // navigate("/carts");
                 // console.log(cart);
